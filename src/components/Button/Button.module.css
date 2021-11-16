@@ -23,3 +23,8 @@
 .Button:focus {
   background-color: #303f9f;
 }
+.containerBtn__loadMore {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
