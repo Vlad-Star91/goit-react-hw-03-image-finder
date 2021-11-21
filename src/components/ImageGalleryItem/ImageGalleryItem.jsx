@@ -1,13 +1,22 @@
-import PropTypes from 'prop-types';
-import shortid from 'shortid';
-import s from './ImageGalleryItem.module.css';
+import PropTypes from "prop-types";
+import shortid from "shortid";
+import s from "./ImageGalleryItem.module.css";
 
-const ImageGalleryItem = ({ toggle, images }) => {
+const ImageGalleryItem = ({ setCurrentPicture, images }) => {
+  const handleClick = (e) => {
+    let src = e.target.dataset.largeimage;
+    let alt = e.target.alt;
+    setCurrentPicture({ src, alt });
+  };
   return (
     <>
-      {images.map(item => {
+      {images.map((item) => {
         return (
-          <li onClick={toggle} className="ImageGalleryItem" key={shortid.generate()}>
+          <li
+            onClick={handleClick}
+            className="ImageGalleryItem"
+            key={shortid.generate()}
+          >
             <img
               src={item.webformatURL}
               alt={item.tags}
@@ -22,7 +31,7 @@ const ImageGalleryItem = ({ toggle, images }) => {
 };
 
 ImageGalleryItem.propTypes = {
-  toggle: PropTypes.func.isRequired,
+  setCurrentPicture: PropTypes.func.isRequired,
   images: PropTypes.arrayOf(PropTypes.shape).isRequired,
 };
 

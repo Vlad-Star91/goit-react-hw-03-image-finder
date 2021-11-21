@@ -4,12 +4,3 @@
   grid-gap: 16px;
   padding-bottom: 24px;
 }
-
-.container-paragraphInfo {
-  display: flex;
-  justify-content: center;
-}
-
-.paragraphInfo {
-  margin-bottom: 0;
-}
