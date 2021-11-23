@@ -23,17 +23,11 @@ class App extends Component {
     largeImageSrc: "",
     alt: "",
   };
-
-  // componentDidMount() {
-  //   this.getData(this.state.searchRequest, this.state.page);
-  // }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchRequest !== this.state.searchRequest) {
       this.setState({ pictures: [] });
     }
   }
-
   getData = (request, page) => {
     GetImagesApi(request, page)
       .then((response) => {
@@ -41,7 +35,6 @@ class App extends Component {
           this.setState({
             pictures: [...this.state.pictures, ...response.data.hits],
           });
-
           if (this.state.pictures.length === 0) {
             toast.error("Error request!");
           }
@@ -60,51 +53,37 @@ class App extends Component {
 
   setSearchRequest = (request) => {
     this.setState({ loading: true, searchRequest: request });
-    // this.setState({ searchRequest: request });
     this.getData(request, this.state.page);
   };
-
   pageIncrement = () => {
     this.setState({ page: this.state.page + 1, loading: true });
     this.getData(this.state.searchRequest, this.state.page + 1);
     scrollPageDown();
-    // this.setState({ loading: true });
     return;
   };
-
   toggleModal = () => {
     this.setState({ showModal: !this.state.showModal });
   };
-
-  setCurrentPictureSrc = ({ largeImageSrc, alt }) => {
+  setCurrentPictureSrc = (largeImageSrc, alt) => {
     this.setState({ showModal: !this.state.showModal });
-    console.log(largeImageSrc, alt);
     if (largeImageSrc !== undefined) {
       this.setState({ largeImageSrc, alt });
-      // this.setState({ alt: largeImageSrc.target.alt });
     }
   };
-
   render() {
-    console.log(this.props);
     return (
       <div className="App">
         <ToastContainer autoClose={2000} newestOnTop={true} />
-
         <Searchbar onSubmit={this.setSearchRequest} />
-
         {this.state.pictures.length !== 0 && (
           <ImageGallery
             setCurrentPicture={this.setCurrentPictureSrc}
             images={this.state.pictures}
           />
         )}
-
         {this.state.showModal && (
           <Modal onClose={this.toggleModal}>
-            <div>
-              <img src={this.state.largeImageSrc} alt={this.state.alt} />
-            </div>
+            <img src={this.state.largeImageSrc} alt={this.state.alt} />
           </Modal>
         )}
         {this.state.loading && <Load />}

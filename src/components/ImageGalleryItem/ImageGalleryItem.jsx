@@ -3,11 +3,9 @@ import shortid from "shortid";
 import s from "./ImageGalleryItem.module.css";
 
 const ImageGalleryItem = ({ setCurrentPicture, images }) => {
-  const handleClick = (e) => {
-    let src = e.target.dataset.largeimage;
-    let alt = e.target.alt;
-    setCurrentPicture({ src, alt });
-  };
+  const handleClick = (e) =>
+    setCurrentPicture(e.target.dataset.largeimage, e.target.alt);
+
   return (
     <>
       {images.map((item) => {
