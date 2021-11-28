@@ -1,27 +1,27 @@
-import "./App.css";
-import "../../styles/styles.css";
-import React, { Component } from "react";
-import { Searchbar } from "../Searchbar/Searchbar.jsx";
-import { Modal } from "../Modal/Modal.jsx";
-import { ImageGallery } from "../ImageGallery/ImageGallery";
-import { Button } from "../Button/Button.jsx";
-import { GetImagesApi } from "../../Api/fetchApi";
-import { Load } from "../Loader/Loader.jsx";
-import scrollPageDown from "../../js/scrollPageDown";
+import './App.css';
+import '../../styles/styles.css';
+import React, { Component } from 'react';
+import { Searchbar } from '../Searchbar/Searchbar.jsx';
+import { Modal } from '../Modal/Modal.jsx';
+import { ImageGallery } from '../ImageGallery/ImageGallery';
+import { Button } from '../Button/Button.jsx';
+import { GetImagesApi } from '../../Api/fetchApi';
+import { Load } from '../Loader/Loader.jsx';
+import scrollPageDown from '../../helpers/scrollPageDown';
 
-import { ToastContainer } from "react-toastify";
-import { toast } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 class App extends Component {
   state = {
     showModal: false,
     pictures: [],
-    searchRequest: "",
+    searchRequest: '',
     loading: false,
-    error: "",
+    error: '',
     page: 1,
-    largeImageSrc: "",
-    alt: "",
+    largeImageSrc: '',
+    alt: '',
   };
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchRequest !== this.state.searchRequest) {
@@ -30,28 +30,28 @@ class App extends Component {
   }
   getData = (request, page) => {
     GetImagesApi(request, page)
-      .then((response) => {
+      .then(response => {
         if (response.status === 200 && this.state.searchRequest.trim().length) {
           this.setState({
             pictures: [...this.state.pictures, ...response.data.hits],
           });
           if (this.state.pictures.length === 0) {
-            toast.error("Error request!");
+            toast.error('Error request!');
           }
         }
         if (response.status === 404) {
-          throw new Error(response.message || "pictures not exist");
+          throw new Error(response.message || 'pictures not exist');
         }
       })
+      .then(() => this.setState({ loading: false }))
       .catch(function (error) {
-        console.error("error", error);
+        console.error('error', error);
       })
-      .then(() => {
-        this.setState({ loading: false });
+      .finally(() => {
+        scrollPageDown();
       });
   };
-
-  setSearchRequest = (request) => {
+  setSearchRequest = request => {
     this.setState({ loading: true, searchRequest: request });
     this.getData(request, this.state.page);
   };
@@ -71,25 +71,32 @@ class App extends Component {
     }
   };
   render() {
+    const {
+      toggleModal,
+      setSearchRequest,
+      pageIncrement,
+      setCurrentPictureSrc,
+    } = this;
+    const { showModal, loading, pictures, largeImageSrc, alt } = this.state;
     return (
       <div className="App">
         <ToastContainer autoClose={2000} newestOnTop={true} />
-        <Searchbar onSubmit={this.setSearchRequest} />
-        {this.state.pictures.length !== 0 && (
+        <Searchbar onSubmit={setSearchRequest} />
+        {pictures.length !== 0 && (
           <ImageGallery
-            setCurrentPicture={this.setCurrentPictureSrc}
-            images={this.state.pictures}
+            setCurrentPicture={setCurrentPictureSrc}
+            images={pictures}
           />
         )}
-        {this.state.showModal && (
-          <Modal onClose={this.toggleModal}>
-            <img src={this.state.largeImageSrc} alt={this.state.alt} />
+        {showModal && (
+          <Modal onClose={toggleModal}>
+            <img src={largeImageSrc} alt={alt} />
           </Modal>
         )}
-        {this.state.loading && <Load />}
-        {this.state.pictures.length > 0 && (
-          <div className={"container"}>
-            <Button onClick={this.pageIncrement} />
+        {loading && <Load />}
+        {pictures.length > 0 && (
+          <div className={'container'}>
+            <Button onClick={pageIncrement} />
           </div>
         )}
       </div>

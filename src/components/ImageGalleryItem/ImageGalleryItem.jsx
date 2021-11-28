@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
-import shortid from "shortid";
-import s from "./ImageGalleryItem.module.css";
+import PropTypes from 'prop-types';
+import shortid from 'shortid';
+import s from './ImageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ setCurrentPicture, images }) => {
-  const handleClick = (e) =>
+  const handleClick = e =>
     setCurrentPicture(e.target.dataset.largeimage, e.target.alt);
 
   return (
     <>
-      {images.map((item) => {
+      {images.map(item => {
         return (
           <li
             onClick={handleClick}
@@ -27,7 +27,6 @@ const ImageGalleryItem = ({ setCurrentPicture, images }) => {
     </>
   );
 };
-
 ImageGalleryItem.propTypes = {
   setCurrentPicture: PropTypes.func.isRequired,
   images: PropTypes.arrayOf(PropTypes.shape).isRequired,
