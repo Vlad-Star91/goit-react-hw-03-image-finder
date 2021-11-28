@@ -28,14 +28,14 @@ class App extends Component {
       this.setState({ pictures: [] });
     }
   }
-  getData = (request, page) => {
+  getData = (request, page, target) => {
     GetImagesApi(request, page)
       .then(response => {
         if (response.status === 200 && this.state.searchRequest.trim().length) {
           this.setState({
             pictures: [...this.state.pictures, ...response.data.hits],
           });
-          if (this.state.pictures.length === 0) {
+          if (response.data.hits.length === 0) {
             toast.error('Error request!');
           }
         }
